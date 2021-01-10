@@ -22,13 +22,12 @@ static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#ffffff";
 static const char col_cyan[]        = "#37474F";
-static const char hid_fg[]        = "#4AB6FF";
 static const char col_border[]      = "#42A5F5";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
 	[SchemeSel]  = { col_gray4, col_cyan,  col_border  },
-	[SchemeHid]  = { hid_fg,  col_gray1, col_border  },
+	[SchemeHid]  = { col_cyan,  col_gray1, col_border  },
 };
 
 static const char *const autostart[] = {
