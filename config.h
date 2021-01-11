@@ -103,7 +103,7 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
 static const char *termcmd2[]  = { "alacritty", NULL };
-static const char *layoutmenu_cmd = "/home/baizeyv/MY/dwm/layoutmenu.sh";
+static const char *layoutmenu_cmd = "/home/baizeyv/willGit/dwm/layoutmenu.sh";
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
 
@@ -179,6 +179,7 @@ static Key keys[] = {
 	TAGKEYS(                        XK_8,                      7)
 	TAGKEYS(                        XK_9,                      8)
 	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+	{ MODKEY|ControlMask|ShiftMask, XK_q,      quit,           {1} }, 
 };
 
 /* resizemousescroll direction argument list */
@@ -224,4 +225,6 @@ static Button buttons[] = {
 static Signal signals[] = {
 	/* signum       function        argument  */
 	{ 1,            setlayout,      {.v = 0} },
+	{ 10,            quit,      {0} }, /* close signal */
+	{ 11,            quit,      {1} }, /* restart signal */
 };
