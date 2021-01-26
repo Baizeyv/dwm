@@ -122,6 +122,7 @@ static const char *volmute[] = { "/home/baizeyv/willGit/dwm/script/operate/vol-t
 static const char *volup[] = { "/home/baizeyv/willGit/dwm/script/operate/vol-up.sh", NULL };
 static const char *voldown[] = { "/home/baizeyv/willGit/dwm/script/operate/vol-down.sh", NULL };
 
+#include "tagall.c"
 #include "movestack.c"
 static Key keys[] = {
 	/* modifier                     key        function                argument */
@@ -187,7 +188,25 @@ static Key keys[] = {
 	{ MODKEY,                       XK_r,      togglermaster,          {0} },
     { MODKEY|ControlMask,           XK_space,  focusmaster,            {0} },
 	{ MODKEY|Mod1Mask,              XK_space,  togglealwaysontop,      {0} },
-	{ MODKEY,                       XK_o,      winview,        {0} },
+	{ MODKEY,                       XK_o,      winview,                {0} },
+	{ ControlMask|ShiftMask,        XK_F1,     tagall,                 {.v = "F1"} },
+	{ ControlMask|ShiftMask,        XK_F2,     tagall,                 {.v = "F2"} },
+	{ ControlMask|ShiftMask,        XK_F3,     tagall,                 {.v = "F3"} },
+	{ ControlMask|ShiftMask,        XK_F4,     tagall,                 {.v = "F4"} },
+	{ ControlMask|ShiftMask,        XK_F5,     tagall,                 {.v = "F5"} },
+	{ ControlMask|ShiftMask,        XK_F6,     tagall,                 {.v = "F6"} },
+	{ ControlMask|ShiftMask,        XK_F7,     tagall,                 {.v = "F7"} },
+	{ ControlMask|ShiftMask,        XK_F8,     tagall,                 {.v = "F8"} },
+	{ ControlMask|ShiftMask,        XK_F9,     tagall,                 {.v = "F9"} },
+	{ MODKEY|ShiftMask,             XK_F1,     tagall,                 {.v = "1"} },
+	{ MODKEY|ShiftMask,             XK_F2,     tagall,                 {.v = "2"} },
+	{ MODKEY|ShiftMask,             XK_F3,     tagall,                 {.v = "3"} },
+	{ MODKEY|ShiftMask,             XK_F4,     tagall,                 {.v = "4"} },
+	{ MODKEY|ShiftMask,             XK_F5,     tagall,                 {.v = "5"} },
+	{ MODKEY|ShiftMask,             XK_F6,     tagall,                 {.v = "6"} },
+	{ MODKEY|ShiftMask,             XK_F7,     tagall,                 {.v = "7"} },
+	{ MODKEY|ShiftMask,             XK_F8,     tagall,                 {.v = "8"} },
+	{ MODKEY|ShiftMask,             XK_F9,     tagall,                 {.v = "9"} },
 	{ MODKEY|ShiftMask,             XK_x,      killunsel,              {0} },
 	{ MODKEY|ShiftMask,             XK_q,      quit,                   {0} },
 	{ MODKEY|ControlMask|ShiftMask, XK_q,      quit,                   {1} }, 
