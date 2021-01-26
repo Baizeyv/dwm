@@ -12,7 +12,7 @@ static const int showsystray        = 1;     /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
 static const Bool viewontag         = True;     /* Switch view on tag switch */
-static const char buttonbar[]       = "<O>";
+static const char buttonbar[]       = " ";
 static const int startontag         = 0;        /* 0 means no tag active on start */
 static const int user_bh            = 22;        /* 0 means that dwm will calculate bar height, >= 1 means dwm will user_bh as bar height */
 static const char *fonts[]          = { "Hasklug Nerd Font:size=11" };
@@ -32,7 +32,8 @@ static const char *colors[][3]      = {
 };
 
 static const char *const autostart[] = {
-	"st", NULL,
+    "sh", "/home/baizeyv/willGit/dwm/script/autostart/autostart.sh", NULL,
+    /* "polybar", "example", NULL, */
 	NULL /* terminate */
 };
 
@@ -42,10 +43,12 @@ static const char *tagsalt[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 /* launcher commands (They must be NULL terminated) */
 static const char* surf[]      = { "surf", "baidu.com", NULL };
+static const char* ranger[]    = { "st", "-e", "ranger", NULL };
 
 static const Launcher launchers[] = {
        /* command       name to display */
-	{ surf,         "surf" },
+	{ surf,           "" },
+	{ ranger,         "" },
 };
 
 static const Rule rules[] = {
@@ -53,9 +56,12 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class      instance    title       tags mask     isfloating canfocus   monitor */
-	{ "Gimp",     NULL,       NULL,       0,            1,         1,         -1 },
-	{ "Firefox",  NULL,       NULL,       1 << 8,       0,         1,         -1 },
+	/* class                instance    title       tags mask     isfloating canfocus   monitor  floatcenterrule(1 center)   float x,y,w,h     floatborderpx */
+	{ "Gimp",                NULL,       NULL,       0,            1,         1,         -1,            1,                   50,50,500,500,      1 },
+	{ "firefox",             NULL,       NULL,       1 << 8,       1,         1,         -1,            1,                   50,50,500,500,      1 },
+    { "Polybar",             NULL,       NULL,       0,            1,         0,         -1,            0,                   50,50,500,500,      1},
+	{ "netease-cloud-music", NULL,       NULL,       0,            1,         1,         -1,            1,                   50,50,500,500,      1 },
+    { "xdman-Main",          NULL,       NULL,       0,            1,         1,         -1,            1,                   50,50,500,500,      1 },
 };
 
 /* layout(s) */
@@ -89,7 +95,7 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
-#define MODKEY Mod1Mask
+#define MODKEY Mod4Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -104,10 +110,17 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "st", NULL };
 static const char *termcmd2[]  = { "alacritty", NULL };
-static const char *layoutmenu_cmd = "/home/baizeyv/willGit/dwm/layoutmenu.sh";
+static const char *layoutmenu_cmd = "/home/baizeyv/willGit/dwm/script/layout/layoutmenu.sh";
 static const char *rootRightClk[] = { "/home/baizeyv/NEW/xmenuScripts/rootRightClk.sh", NULL};
 static const char scratchpadname[] = "scratchpad";
 static const char *scratchpadcmd[] = { "st", "-t", scratchpadname, "-g", "120x34", NULL };
+static const char *chooseLayout[] = { "/home/baizeyv/willGit/dwm/script/layout/chooselayout.sh", NULL};
+static const char *start[] = { "/home/baizeyv/willGit/UsefulScript/START.sh", NULL};
+static const char *update[] = { "/home/baizeyv/willGit/dwm/script/start/rightClk.sh", NULL};
+
+static const char *volmute[] = { "/home/baizeyv/willGit/dwm/script/operate/vol-toggle.sh", NULL };
+static const char *volup[] = { "/home/baizeyv/willGit/dwm/script/operate/vol-up.sh", NULL };
+static const char *voldown[] = { "/home/baizeyv/willGit/dwm/script/operate/vol-down.sh", NULL };
 
 #include "movestack.c"
 static Key keys[] = {
@@ -115,6 +128,10 @@ static Key keys[] = {
 	{ MODKEY,                       XK_p,      spawn,                  {.v = dmenucmd } },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,                  {.v = termcmd } },
 	{ MODKEY|ControlMask,           XK_Return, spawn,                  {.v = termcmd2 } },
+	{ MODKEY|ControlMask,           XK_k,      spawn,                  {.v = chooseLayout } },
+	{ MODKEY,                       XK_F1,     spawn,                  {.v = volmute } },
+	{ MODKEY,                       XK_F2,     spawn,                  {.v = voldown } },
+	{ MODKEY,                       XK_F3,     spawn,                  {.v = volup } },
 	{ MODKEY,                       XK_b,      togglebar,              {0} },
 	{ MODKEY,                       XK_n,      focusstackvis,          {.i = +1 } },
 	{ MODKEY,                       XK_e,      focusstackvis,          {.i = -1 } },
@@ -132,16 +149,16 @@ static Key keys[] = {
 	{ MODKEY,                       XK_Return, zoom,                   {0} },
 	{ MODKEY,                       XK_Tab,    view,                   {0} },
 	{ MODKEY|ShiftMask,             XK_c,      killclient,             {0} },
-	{ MODKEY,                       XK_F1,     setlayout,              {.v = &layouts[0]} },
-	{ MODKEY,                       XK_F2,     setlayout,              {.v = &layouts[1]} },
-	{ MODKEY,                       XK_F3,     setlayout,              {.v = &layouts[2]} },
-	{ MODKEY,                       XK_F4,     setlayout,              {.v = &layouts[3]} },
-	{ MODKEY,                       XK_F5,     setlayout,              {.v = &layouts[4]} },
-	{ MODKEY,                       XK_F6,     setlayout,              {.v = &layouts[5]} },
-	{ MODKEY,                       XK_F7,     setlayout,              {.v = &layouts[6]} },
-	{ MODKEY,                       XK_F8,     setlayout,              {.v = &layouts[7]} },
-	{ MODKEY,                       XK_F9,     setlayout,              {.v = &layouts[8]} },
-	{ MODKEY,                       XK_F10,    setlayout,              {.v = &layouts[9]} },
+	{ ControlMask,                  XK_F1,     setlayout,              {.v = &layouts[0]} },
+	{ ControlMask,                  XK_F2,     setlayout,              {.v = &layouts[1]} },
+	{ ControlMask,                  XK_F3,     setlayout,              {.v = &layouts[2]} },
+	{ ControlMask,                  XK_F4,     setlayout,              {.v = &layouts[3]} },
+	{ ControlMask,                  XK_F5,     setlayout,              {.v = &layouts[4]} },
+	{ ControlMask,                  XK_F6,     setlayout,              {.v = &layouts[5]} },
+	{ ControlMask,                  XK_F7,     setlayout,              {.v = &layouts[6]} },
+	{ ControlMask,                  XK_F8,     setlayout,              {.v = &layouts[7]} },
+	{ ControlMask,                  XK_F9,     setlayout,              {.v = &layouts[8]} },
+	{ ControlMask,                  XK_F10,    setlayout,              {.v = &layouts[9]} },
 	{ MODKEY,                       XK_space,  setlayout,              {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating,         {0} },
 	{ MODKEY,                       XK_w,      togglesticky,           {0} },
@@ -169,7 +186,7 @@ static Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_f,      fullscreen,             {0} },
 	{ MODKEY,                       XK_r,      togglermaster,          {0} },
     { MODKEY|ControlMask,           XK_space,  focusmaster,            {0} },
-	{ MODKEY|Mod4Mask,              XK_space,  togglealwaysontop,      {0} },
+	{ MODKEY|Mod1Mask,              XK_space,  togglealwaysontop,      {0} },
 	{ MODKEY|ShiftMask,             XK_x,      killunsel,              {0} },
 	{ MODKEY|ShiftMask,             XK_q,      quit,                   {0} },
 	{ MODKEY|ControlMask|ShiftMask, XK_q,      quit,                   {1} }, 
@@ -197,8 +214,9 @@ static const int scrollargs[][2] = {
 /* click can be ClkTagBar, ClkLtSymbol, ClkStatusText, ClkWinTitle, ClkClientWin, or ClkRootWin */
 static Button buttons[] = {
 	/* click                event mask      button          function        argument */
-	{ ClkButton,		0,		Button1,	spawn,		{.v = dmenucmd } },
-	{ ClkRootWin,		0,		Button3,	spawn,		{.v = rootRightClk } },
+	{ ClkButton,		    0,		Button1,	spawn,		{.v = start } },
+	{ ClkButton,		    0,		Button3,	spawn,		{.v = update } },
+	{ ClkRootWin,		    0,		Button3,	spawn,		{.v = rootRightClk } },
 	{ ClkLtSymbol,          0,              Button1,        setlayout,      {0} },
 	{ ClkLtSymbol,          0,              Button3,        layoutmenu,     {0} },
 	{ ClkWinTitle,          0,              Button1,        togglewin,      {0} },
@@ -227,7 +245,16 @@ static Button buttons[] = {
 /* trigger signals using `xsetroot -name "fsignal:<signum>"` */
 static Signal signals[] = {
 	/* signum       function        argument  */
-	{ 1,            setlayout,      {.v = 0} },
-	{ 10,            quit,      {0} }, /* close signal */
-	{ 11,            quit,      {1} }, /* restart signal */
+	{ 1,            setlayout,      {.v = &layouts[0]} },
+	{ 2,            setlayout,      {.v = &layouts[1]} },
+	{ 3,            setlayout,      {.v = &layouts[2]} },
+	{ 4,            setlayout,      {.v = &layouts[3]} },
+	{ 5,            setlayout,      {.v = &layouts[4]} },
+	{ 6,            setlayout,      {.v = &layouts[5]} },
+	{ 7,            setlayout,      {.v = &layouts[6]} },
+	{ 8,            setlayout,      {.v = &layouts[7]} },
+	{ 9,            setlayout,      {.v = &layouts[8]} },
+	{ 10,           setlayout,      {.v = &layouts[9]} },
+	{ 11,            quit,      {0} }, /* close signal */
+	{ 12,            quit,      {1} }, /* restart signal */
 };

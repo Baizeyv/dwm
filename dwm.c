@@ -129,6 +129,9 @@ struct Client {
 	int bw, oldbw;
 	unsigned int tags;
 	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen, issticky, canfocus, isalwaysontop;
+    int floatcenterrule;
+	int floatborderpx;
+	int hasfloatbw;
 	Client *next;
 	Client *snext;
 	Monitor *mon;
@@ -196,6 +199,9 @@ typedef struct {
 	int isfloating;
     int canfocus;
 	int monitor;
+    int floatcenterrule;
+	int floatx, floaty, floatw, floath;
+	int floatborderpx;
 } Rule;
 
 typedef struct Systray   Systray;
@@ -459,6 +465,21 @@ applyrules(Client *c)
 			c->isfloating = r->isfloating;
             c->canfocus = r->canfocus;
 			c->tags |= r->tags;
+
+            c->floatcenterrule = r->floatcenterrule;
+            if(!(c->floatcenterrule)){
+                if (c->floatborderpx >= 0) {
+                    c->floatborderpx = r->floatborderpx;
+                    c->hasfloatbw = 1;
+                }
+                if (r->isfloating) {
+                    c->x = c->mon->mx + r->floatx;
+                    c->y = r->floaty;
+                    c->w = r->floatw;
+                    c->h = r->floath;
+                }
+            }
+
 			for (m = mons; m && m->num != r->monitor; m = m->next);
 			if (m)
 				c->mon = m;
@@ -1598,6 +1619,7 @@ manage(Window w, XWindowAttributes *wa)
 	Client *c, *t = NULL;
 	Window trans = None;
 	XWindowChanges wc;
+    const Rule *r;
 
 	c = ecalloc(1, sizeof(Client));
 	c->win = w;
@@ -1644,8 +1666,17 @@ manage(Window w, XWindowAttributes *wa)
 	updatesizehints(c);
 	updatewmhints(c);
 	updatemotifhints(c);
-	c->x = c->mon->mx + (c->mon->mw - WIDTH(c)) / 2;
-	c->y = c->mon->my + (c->mon->mh - HEIGHT(c)) / 2;
+
+	for (unsigned int i = 0; i < LENGTH(rules); i++) {
+		r = &rules[i];
+        c->floatcenterrule = r->floatcenterrule;
+	}
+
+    if(c->floatcenterrule){
+        c->x = c->mon->mx + (c->mon->mw - WIDTH(c)) / 2;
+        c->y = c->mon->my + (c->mon->mh - HEIGHT(c)) / 2;
+    }
+
 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
 	grabbuttons(c, 0);
 	if (!c->isfloating)
@@ -1934,12 +1965,27 @@ void
 resizeclient(Client *c, int x, int y, int w, int h)
 {
 	XWindowChanges wc;
+    const Rule *r;
 
 	c->oldx = c->x; c->x = wc.x = x;
 	c->oldy = c->y; c->y = wc.y = y;
 	c->oldw = c->w; c->w = wc.width = w;
 	c->oldh = c->h; c->h = wc.height = h;
-	wc.border_width = c->bw;
+	/* wc.border_width = c->bw; */
+
+	for (unsigned int i = 0; i < LENGTH(rules); i++) {
+		r = &rules[i];
+        c->floatcenterrule = r->floatcenterrule;
+	}
+    if(!(c->floatcenterrule)){
+        if (c->isfloating && c->hasfloatbw && !c->isfullscreen)
+            wc.border_width = c->floatborderpx;
+        else
+            wc.border_width = c->bw;
+    }else{
+        wc.border_width = c->bw;
+    }
+
 	if (((nexttiled(c->mon->clients) == c && !nexttiled(c->next))
 	    || &monocle == c->mon->lt[c->mon->sellt]->arrange)
 	    && !c->isfullscreen && !c->isfloating
