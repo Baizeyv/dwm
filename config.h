@@ -187,6 +187,7 @@ static Key keys[] = {
 	{ MODKEY,                       XK_r,      togglermaster,          {0} },
     { MODKEY|ControlMask,           XK_space,  focusmaster,            {0} },
 	{ MODKEY|Mod1Mask,              XK_space,  togglealwaysontop,      {0} },
+	{ MODKEY,                       XK_o,      winview,        {0} },
 	{ MODKEY|ShiftMask,             XK_x,      killunsel,              {0} },
 	{ MODKEY|ShiftMask,             XK_q,      quit,                   {0} },
 	{ MODKEY|ControlMask|ShiftMask, XK_q,      quit,                   {1} }, 
