@@ -30,9 +30,9 @@ udiskie -a -n -s &
 
 # keyboard
 # vim
-# setxkbmap us colemak -option -option caps:swapescape -option ctrl:swap_lwin_lctl -option ctrl:swap_rwin_rctl -option lv3:ralt_alt
+setxkbmap us colemak -option -option caps:swapescape -option ctrl:swap_lwin_lctl -option ctrl:swap_rwin_rctl -option lv3:ralt_alt
 # emacs
-setxkbmap us colemak -option -option caps:swapescape -option altwin:swap_lalt_lwin -option ctrl:swap_rwin_rctl -option lv3:ralt_alt
+# setxkbmap us colemak -option -option caps:swapescape -option altwin:swap_lalt_lwin -option ctrl:swap_rwin_rctl -option lv3:ralt_alt
 xset r rate 250 30
 
 # proxy
