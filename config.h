@@ -125,7 +125,6 @@ static const char *volup[] = { "/home/baizeyv/willGit/dwm/script/operate/vol-up.
 static const char *voldown[] = { "/home/baizeyv/willGit/dwm/script/operate/vol-down.sh", NULL };
 
 #include "tagall.c"
-/* #include "movestack.c" */
 static Key keys[] = {
 	/* modifier                     key        function                argument */
 	{ MODKEY,                       XK_p,      spawn,                  {.v = dmenucmd } },
@@ -138,10 +137,8 @@ static Key keys[] = {
 	{ MODKEY,                       XK_b,      togglebar,              {0} },
 	{ MODKEY,                       XK_n,      focusstackvis,          {.i = +1 } },
 	{ MODKEY,                       XK_e,      focusstackvis,          {.i = -1 } },
-	/* { MODKEY|ShiftMask,             XK_n,      movestack,              {.i = +1 } }, */
-	/* { MODKEY|ShiftMask,             XK_e,      movestack,              {.i = -1 } }, */
-	{ MODKEY|ShiftMask,             XK_n,      pushdown,              {.i = +1 } },
-	{ MODKEY|ShiftMask,             XK_e,      pushup,              {.i = -1 } },
+	{ MODKEY|ShiftMask,             XK_n,      pushdown,               {.i = +1 } },
+	{ MODKEY|ShiftMask,             XK_e,      pushup,                 {.i = -1 } },
 	{ MODKEY|ControlMask,           XK_n,      focusstackhid,          {.i = +1 } },
 	{ MODKEY|ControlMask,           XK_e,      focusstackhid,          {.i = -1 } },
 	{ MODKEY,                       XK_a,      incnmaster,             {.i = +1 } },
