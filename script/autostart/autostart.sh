@@ -6,14 +6,15 @@ xrandr --output HDMI-1-1 --mode 1920x1080 --auto --primary --output eDP-1-1 --au
 # status bar
 dwmblocks &
 
+# fcitx
+fcitx5 &
+
 # notify client
-deadd-notification-center &
+# deadd-notification-center &
+dunst &
 
 # network manage
 nm-applet &
-
-# fcitx
-# fcitx5 &
 
 # picom
 picom --experimental-backends -b
